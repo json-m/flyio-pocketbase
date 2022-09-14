@@ -1,0 +1,32 @@
+# fly.toml file generated for zj-pocketbase on 2022-09-14T04:05:29Z
+
+app = "zj-pocketbase"
+kill_signal = "SIGINT"
+kill_timeout = 5
+
+[build]
+  dockerfile = "./Dockerfile"
+
+[env]
+
+[mounts]
+  source="zjpocketbase"
+  destination="/opt/pocketbase/pb_data"
+
+[[services]]
+  internal_port = 8090
+  protocol = "tcp"
+  [services.concurrency]
+    hard_limit = 256
+    soft_limit = 20
+    type = "connections"
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [[services.tcp_checks]]
+    grace_period = "1s"
+    interval = "15s"
+    restart_limit = 0
+    timeout = "2s"
